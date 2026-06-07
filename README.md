@@ -18,7 +18,9 @@ Adds mouse wheel camera zoom to Gothic 1 Remake.
 ## Usage
 
 1. Open ReShade overlay (Home key) and enable the camera fix in k4sh's UI
-2. Close the overlay and play — mouse wheel now controls zoom
+2. Close the overlay and play — mouse wheel or controller now controls zoom
+
+### Keyboard & Mouse
 
 | Input | Action |
 |-------|--------|
@@ -26,6 +28,16 @@ Adds mouse wheel camera zoom to Gothic 1 Remake.
 | Mouse Wheel Up | Zoom In (back to default) |
 | Middle Mouse | Reset to default |
 | Ctrl+R | Reset to default |
+
+### Controller (Xbox / PlayStation)
+
+| Xbox | PlayStation | Action |
+|------|-------------|--------|
+| LB + Y | L1 + Triangle | Zoom In |
+| LB + A | L1 + Cross | Zoom Out |
+| LB + RB + R3 | L1 + R1 + R3 | Reset to default |
+
+Hold the button to keep zooming in steps. Y/A (Triangle/Cross) are blocked from the game while LB (L1) is held.
 
 ## Notes
 
