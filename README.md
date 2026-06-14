@@ -1,85 +1,146 @@
-# Camera Zoom - Mouse Wheel & Controller Support for Gothic 1 Remake
+# Camera Zoom and First Person Mode - Mouse and Controller
 
-Adds mouse wheel and controller camera zoom to Gothic 1 Remake via a ReShade addon companion for k4sh's camera fix mod.
+Take control of your camera. Zoom out for a wider view of the world or zoom all the way in for a first-person perspective. Adjust camera distance, lateral offset, height, and FOV — all from the ReShade overlay. Mouse wheel and controller support with smooth, configurable transitions.
+
+## v2.1 — Now Fully Standalone
+
+k4sh's Gothic1RemakeCore.dll is **no longer required**. Camera Zoom now hooks the game directly. Just drop in the addon and go.
+
+A companion version that works with k4sh's mod will also be made available later for those who prefer it.
 
 ## Requirements
 
-- [ReShade](https://reshade.me/) with full addon support — easy install with [RHI](https://www.nexusmods.com/site/mods/1710)
-- [Gothic 1 Remake Camera Fix by k4sh](https://www.nexusmods.com/gothic1remake/mods/36) (Gothic1RemakeCore.dll + Gothic1RemakeUI.addon64)
+- [ReShade](https://reshade.me/) with **full addon support** (not the regular version) — easy install with [RHI](https://www.nexusmods.com/site/mods/1710)
 
 ## Installation
 
 1. Install ReShade with full addon support for Gothic 1 Remake
-2. Install k4sh's camera fix mod from Nexus
-3. Copy `CameraZoom.addon64` to your game folder:
+2. Copy **CameraZoom.addon64** to your game folder:
    ```
    Gothic 1 Remake\G1R\Binaries\Win64\
    ```
-4. Launch the game
+3. Launch the game — zoom is immediately active
 
-## Setup (first time)
+## Upgrading from v1.x
 
-1. Open the ReShade overlay (Home key)
-2. Enable the camera fix in k4sh's panel (tick the checkbox)
-3. Close the overlay — zoom is now active
+If you previously used Camera Zoom v1.x with k4sh's mod, you can remove his files as they are no longer needed:
 
-## Controls
+- Delete **Gothic1RemakeCore.dll** from the game folder
+- Delete **Gothic1RemakeUI.addon64** from the game folder
+- Delete **pluginsettings.ini** from the game folder (if present)
+- Delete your old **CameraZoom.ini** — v2.0 uses different settings format
+
+k4sh's mod may conflict with Camera Zoom v2.0+ as both hook camera distance. Do not run them together.
+
+## Default Controls
 
 ### Keyboard & Mouse
 
-| Input | Action |
-|-------|--------|
-| Mouse Wheel Up | Zoom In |
-| Mouse Wheel Down | Zoom Out |
-| Ctrl+R | Reset to default (rebindable) |
+| Action | Default |
+|--------|---------|
+| Zoom In/Out | Mouse Wheel |
+| Reset | Ctrl+R |
+| Toggle 1st/3rd Person | Shift+R |
 
-### Controller (Xbox / PlayStation)
+- Zoom in/out can be bound to any key or mouse button (Mouse 4/5, etc.)
+- Mouse wheel can be disabled for users who use scroll for weapon switching
 
-| Xbox | PlayStation | Action |
-|------|-------------|--------|
-| LB + Y | L1 + Triangle | Zoom In |
-| LB + A | L1 + Cross | Zoom Out |
-| LB + RB + R3 | L1 + R1 + R3 | Reset to default |
+### Controller (Xbox)
 
-Hold the button to keep zooming in steps. Works with both XInput (Xbox/Steam) and native DualSense (PS5 via USB/Bluetooth).
+| Action | Default |
+|--------|---------|
+| Zoom In | LB + Y |
+| Zoom Out | LB + A |
+| Toggle 1st/3rd Person | LB + L3 |
+| Reset | LB + LT + L3 |
+
+### Controller (PlayStation / DualSense)
+
+| Action | Default |
+|--------|---------|
+| Zoom In | L1 + Triangle |
+| Zoom Out | L1 + Cross |
+| Toggle 1st/3rd Person | L1 + L3 |
+| Reset | L1 + L2 + L3 |
+
+All controls are fully rebindable via the ReShade overlay. Works with both XInput (Xbox/Steam) and native DualSense (PS5 via USB/Bluetooth).
 
 ## Settings (ReShade Overlay)
 
 Open the ReShade overlay (Home key) and click the **Camera Zoom** tab to configure:
 
-- Max zoom in/out range
-- Scroll step size and smoothing
-- Controller repeat rate
-- Reset key modifier (dropdown: None/Ctrl/Shift/Alt) and key (rebindable)
-- Controller button bindings (cycle through options)
-- Reset Zoom button
-- Reset All Settings button (restores all defaults)
+### Camera Distance
 
-Settings are saved to `CameraZoom.ini` in the game folder and persist between sessions. The mod reads k4sh's camera distance value from `pluginsettings.ini` as the baseline so both mods work together seamlessly.
+| Setting | Default | Description |
+|---------|---------|-------------|
+| Max Zoom In | -320 | How close the camera can get (full first person) |
+| Max Zoom Out | 600 | How far the camera can go |
+| Scroll Step | 70 | Distance per scroll tick |
+| Smoothing | 11 | Interpolation speed |
 
-## Building
+### Camera Offset
 
-### Requirements
-- CMake 3.20+
-- Visual Studio 2022+ (MSVC Build Tools)
+| Setting | Default | Description |
+|---------|---------|-------------|
+| Lateral Offset | 30 | Shift camera left/right |
+| Height Offset | 10 | Shift camera up/down |
 
-### Build
-```cmd
-cmake -S . -B build -G "Visual Studio 18 2026" -A x64
-cmake --build build --config Release
-```
+First-person centering: lateral and height automatically blend to centered when fully zoomed in.
 
-Output: `build/bin/Release/CameraZoom.addon64`
+### Field of View
 
-## Notes
+| Setting | Default | Description |
+|---------|---------|-------------|
+| FOV Offset | 0 | Adjust field of view wider or narrower |
 
-- Zoom out goes beyond the default third-person camera distance
-- Zoom in stops at the default camera position (won't clip through the character)
-- Smooth interpolation for fluid camera movement
-- PS5 DualSense is supported natively — no need for Steam Input or DS4Windows
-- Compatible with [Analogue Movement mod](https://www.nexusmods.com/gothic1remake/mods/31)
+FOV requires one FOV change in game options to activate (the hook captures the camera on first call).
+
+### Keyboard/Mouse Bindings
+
+- Mouse wheel zoom toggle (enable/disable)
+- Scroll modifier: hold a key while scrolling to prevent zoom in menus
+- Zoom in — rebindable to any key or mouse button
+- Zoom out — rebindable to any key or mouse button
+- Reset — rebindable with modifier (default: Ctrl+R)
+- 1st Person Toggle — rebindable (default: Shift+R)
+
+### Controller Bindings
+
+- Zoom in — dropdown: Y/Triangle, B/Circle, X/Square, A/Cross, D-pad Up, D-pad Down
+- Zoom out — dropdown: same options
+- 1st Person — dropdown: same options (default: L3/Left Stick)
+- Modifier — dropdown: LB/L1, RB/R1, or None
+
+Settings are saved to **CameraZoom.ini** in the game folder and persist between sessions.
+
+## Features
+
+- Camera distance locked — sprinting and drawing weapons no longer push the camera out
+- Zoom in far enough for a full first-person view
+- Instant 1st/3rd person toggle (keybind or controller button)
+- Camera automatically centers (lateral and height) when entering first person
+- Smooth transition into first person starts at 80% zoom depth
+- Smooth interpolation for all zoom movement
+- PS5 DualSense supported natively — no need for Steam Input or DS4Windows
+
+## Known Issues
+
+- Rarely the camera can get stuck after using the 1st person toggle — press reset (Ctrl+R or LB+LT+L3) to fix
+- FOV slider requires one FOV change in game options to activate
+
+## Compatibility
+
+- [Analogue Movement mod](https://www.nexusmods.com/gothic1remake/mods/31) — unknown compatibility due to static camera (Camera Zoom locks the distance which may conflict with Analogue Movement's camera behaviour changes)
+
+## Recommended Mods
+
+- [Ultra+](https://www.nexusmods.com/gothic1remake/mods/19) — graphics and performance optimisation framework
 
 ## Credits
 
-- **k4sh** — Gothic 1 Remake camera fix mod (Gothic1RemakeCore.dll) which handles the actual camera hooking
 - **crosire** — ReShade and the addon API
+- **cursey** — SafetyHook library
+
+## Source Code
+
+[https://github.com/RankFTW/Gothic1CameraZoom](https://github.com/RankFTW/Gothic1CameraZoom)

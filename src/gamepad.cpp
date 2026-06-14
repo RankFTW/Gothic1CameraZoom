@@ -127,10 +127,19 @@ static State ParseDualSense() {
     BYTE btn1 = buf[btnOffset + 1];
 
     s.a = (btn0 & 0x20) != 0;      // Cross (bit 5)
+    s.b = (btn0 & 0x40) != 0;      // Circle (bit 6)
     s.y = (btn0 & 0x80) != 0;      // Triangle (bit 7)
+    s.x = (btn0 & 0x10) != 0;      // Square (bit 4)
     s.lb = (btn1 & 0x01) != 0;     // L1 (bit 0)
     s.rb = (btn1 & 0x02) != 0;     // R1 (bit 1)
+    s.lt = (btn1 & 0x04) != 0;     // L2 (bit 2)
     s.r3 = (btn1 & 0x80) != 0;     // R3 (bit 7)
+    s.l3 = (btn1 & 0x40) != 0;     // L3 (bit 6)
+
+    // D-pad is in low nibble of btn0 as a hat value (0-7, 8=neutral)
+    int dpad = btn0 & 0x0F;
+    s.dpadUp = (dpad == 0 || dpad == 1 || dpad == 7);
+    s.dpadDown = (dpad == 3 || dpad == 4 || dpad == 5);
 
     return s;
 }
@@ -148,8 +157,14 @@ State Poll() {
         s.lb = (xstate.Gamepad.wButtons & XINPUT_GAMEPAD_LEFT_SHOULDER) != 0;
         s.rb = (xstate.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER) != 0;
         s.y = (xstate.Gamepad.wButtons & XINPUT_GAMEPAD_Y) != 0;
+        s.b = (xstate.Gamepad.wButtons & XINPUT_GAMEPAD_B) != 0;
+        s.x = (xstate.Gamepad.wButtons & XINPUT_GAMEPAD_X) != 0;
         s.a = (xstate.Gamepad.wButtons & XINPUT_GAMEPAD_A) != 0;
+        s.dpadUp = (xstate.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_UP) != 0;
+        s.dpadDown = (xstate.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_DOWN) != 0;
         s.r3 = (xstate.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_THUMB) != 0;
+        s.l3 = (xstate.Gamepad.wButtons & XINPUT_GAMEPAD_LEFT_THUMB) != 0;
+        s.lt = (xstate.Gamepad.bLeftTrigger > 128);
         return s;
     }
 

@@ -29,6 +29,30 @@ static LRESULT CALLBACK HookedWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM
             s_keyState[wParam] = false;
         }
         break;
+    case WM_MBUTTONDOWN: {
+        std::lock_guard<std::mutex> lock(s_mutex);
+        s_keyState[VK_MBUTTON] = true;
+        break;
+    }
+    case WM_MBUTTONUP: {
+        std::lock_guard<std::mutex> lock(s_mutex);
+        s_keyState[VK_MBUTTON] = false;
+        break;
+    }
+    case WM_XBUTTONDOWN: {
+        std::lock_guard<std::mutex> lock(s_mutex);
+        int btn = GET_XBUTTON_WPARAM(wParam);
+        if (btn == XBUTTON1) s_keyState[VK_XBUTTON1] = true;
+        if (btn == XBUTTON2) s_keyState[VK_XBUTTON2] = true;
+        break;
+    }
+    case WM_XBUTTONUP: {
+        std::lock_guard<std::mutex> lock(s_mutex);
+        int btn = GET_XBUTTON_WPARAM(wParam);
+        if (btn == XBUTTON1) s_keyState[VK_XBUTTON1] = false;
+        if (btn == XBUTTON2) s_keyState[VK_XBUTTON2] = false;
+        break;
+    }
     }
 
     return CallWindowProcW(s_originalWndProc, hwnd, msg, wParam, lParam);
